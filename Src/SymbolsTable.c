@@ -1,23 +1,27 @@
 #include "../Headers/Structs.h"
 #include "../Headers/UtilsFuncs.h"
 #include "../Headers/Constants.h"
+#include "../Headers/Validations.h"
 #include <stdlib.h>
 #include <string.h>
-void initSymbolTable(symbolTableList *list)
+symbolTableList* initSymbolTable()
 {
-    list = (symbolTableList*)malloc(sizeof(symbolTableList));
+    symbolTableList* list = (symbolTableList*)malloc(sizeof(symbolTableList*));
     list->head = NULL;
     list->last = NULL; 
+    return list;
 }
 
 symbolNode* createSymbolNode( char *symbol, int value, char *attr)
 {
     symbolNode* newSymbol=malloc(sizeof(symbolNode));
     newSymbol->symbol=malloc(sizeof(char) * strlen(symbol));
-    strcpy(newSymbol->symbol,substr(symbol,0,strlen(symbol)-1));
+    if(isLabel(symbol))
+       symbol= substr(symbol,0,strlen(symbol)-1);
+    strcpy(newSymbol->symbol,symbol);
     newSymbol->value = value;
     newSymbol->nOfAtt = 1;
-    newSymbol->attributes=malloc(sizeof(char*));
+    newSymbol->attributes=malloc(sizeof(char**));
     newSymbol->attributes[0]=malloc(sizeof(char)* strlen(attr));
     strcpy(newSymbol->attributes[0], substr(attr,1,strlen(attr)));
     return newSymbol;
@@ -53,5 +57,24 @@ void freeSymbolTable(symbolTableList *list)
         free(tmp->attributes);
         free(tmp->symbol);
         free(tmp);
+    }
+}
+
+/*TODO - remove this func when finish!*/
+void printSymbolList(symbolTableList *list)
+{
+    symbolNode* tmp;
+    symbolNode* head = list->head;
+    while (head != NULL)
+    {
+        int i=0;
+        tmp = head;
+        head = head->next;
+        printf("%s, %d, [",tmp->symbol,tmp->value);
+        for ( i = 0; i < tmp->nOfAtt; i++)
+        {
+            printf("%s, ",tmp->attributes[i]);
+        }
+        printf("]\n");
     }
 }

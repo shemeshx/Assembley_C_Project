@@ -15,3 +15,10 @@ boolean isDataAllocation(char *word)
         return true;
     return false;
 }
+
+boolean isExternalOrEntry(char *word)
+{
+    if(strcmp(word,".extern")==0 || strcmp(word,".entry")==0)
+        return true;
+    return false;
+}

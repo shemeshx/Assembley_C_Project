@@ -13,6 +13,6 @@ MemoryImage.o: ${HEADERS}Constants.h ${HEADERS}Structs.h ${HEADERS}UtilsFuncs.h
 	gcc -c -ansi -Wall -pedantic ${SRC}MemoryImage.c -o MemoryImage.o
 UtilsFuncs.o: ${SRC}UtilsFuncs.c ${HEADERS}Constants.h ${HEADERS}Structs.h ${HEADERS}UtilsFuncs.h
 	gcc -c -ansi -Wall -pedantic ${SRC}UtilsFuncs.c -o UtilsFuncs.o
-firstTransition.o: ${SRC}FirstTransition.c ${HEADERS}Constants.h ${HEADERS}FirstTransition.h ${HEADERS}UtilsFuncs.h
+firstTransition.o: ${SRC}FirstTransition.c ${HEADERS}Constants.h ${HEADERS}FirstTransition.h ${HEADERS}UtilsFuncs.h ${HEADERS}SymbolsTable.h
 	gcc -c -ansi -Wall -pedantic ${SRC}FirstTransition.c -o firstTransition.o
 
