@@ -84,3 +84,32 @@ void printMemoryList(memoryImageList *list)
         printf("%d, %#06hx, %c\n",tmp->adress,tmp->value,tmp->type);
     }
 }
+
+char insertCodeLine(methods* methods, char *method, memoryImageList *list, char **operands, char nOfOperands)
+{
+    char methodIndex = indxOfMethod(methods, method);
+    char opcode = methods->opcode[methodIndex];
+    char funct = methods->funct[methodIndex];
+    char srcAddress;
+    char destAdress;
+    char res=0;
+    char bits = AMOUNT_OF_BITS_SRC_CODE-1;
+    /*Build the opcode*/
+    while(bits > 7)
+    {
+        if(opcode&1) res = (res << 1)+1;
+        else res<<=1; 
+        opcode>>=1;
+        bits--;
+    }
+    /*Build the opcode*/
+    while(bits > 3)
+    {
+        if(funct&1) res = (res << 1)+1;
+        else res<<=1; 
+        funct>>=1;
+        bits--;
+    }
+    
+    
+}

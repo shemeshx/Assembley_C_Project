@@ -16,4 +16,6 @@ enum { false, true };
 #define METHODS_AMOUNT 16
 
 #define METHOD_NOT_FOUND -1
+
+#define AMOUNT_OF_BITS_SRC_CODE 12
 #endif
