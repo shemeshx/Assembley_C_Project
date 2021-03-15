@@ -3,8 +3,9 @@
 
 #include "Structs.h"
 
-void initSymbolTable(symbolTableList*);
+symbolTableList* initSymbolTable();
 void addNewSymbol(symbolTableList *, symbolNode *);
 symbolNode* createSymbolNode(char *, int, char *);
 void freeSymbolTable(symbolTableList *);
+void printSymbolList(symbolTableList *list); /*TODO NEED TO BE REMOVED!!*/
 #endif
