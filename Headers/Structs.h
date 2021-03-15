@@ -43,7 +43,7 @@ typedef struct memoryNode {
     Each node contains address, value (as Hexadecimal) and type(?,A,R or E).
     */
     int adress;
-    short value;
+    int value:12;
     char type;
     struct memoryNode* next; 
 }memoryNode;
@@ -62,4 +62,5 @@ typedef struct methods{
     char *funct;
     char *opcode;
 }methods;
+
 #endif

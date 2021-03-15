@@ -17,5 +17,10 @@ enum { false, true };
 
 #define METHOD_NOT_FOUND -1
 
+#define ERROR_WRONG_ADDRESSINGMODE -2
+
+#define ERROR_ARGUMENT_NOT_VALID -3
+typedef char addresingType;
+enum {immediate, direct, relative, register_direct};
 #define AMOUNT_OF_BITS_SRC_CODE 12
 #endif

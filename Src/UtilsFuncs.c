@@ -11,7 +11,7 @@ This file contains all the utilites functions for the project.
 
 
 void trimSpace(char *str);/*Help function to trim spaces*/
-void convertStringToArray(char* str, char *delim ,char** arr); /* this function converts string to an array by using given delimeter */
+void convertStringToArray(char* str,char *delim ,char** arr); /* this function converts string to an array by using given delimeter */
 char amountOfSpaces(char* line); /*this function returns the amount of spaces */
 
 instNode* buildInstructionsList(FILE *insFile)
@@ -156,7 +156,7 @@ int amountOfChars(char* str, char c){
   return amount;           
 }
 
-char* substr(const char *src, int m, int n)
+char* substr(char *src, int m, int n)
 {
     int len, i;
     char *dest;
@@ -175,4 +175,6 @@ char* substr(const char *src, int m, int n)
  
     return dest - len;
 }
+
+
 

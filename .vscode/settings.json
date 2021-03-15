@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "typeinfo": "c",
-        "structs.h": "c"
+        "structs.h": "c",
+        "constants.h": "c",
+        "validations.h": "c"
     }
 }
