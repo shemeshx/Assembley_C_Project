@@ -71,7 +71,7 @@ void addAllocationDataToMemoryImage(memoryImageList *list , char *type, char *da
         if(n==0) 
             addNewMemoryNode(list, createMemoryImageNode(startAddress,atoi(arr[0]),'A'));
         else 
-            for(i=0;i<n;i++)
+            for(i=0;i<n+1;i++)
             {
                 addNewMemoryNode(list, createMemoryImageNode(startAddress+i,atoi(arr[i]),'A'));
             }

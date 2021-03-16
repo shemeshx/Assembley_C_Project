@@ -128,7 +128,9 @@ void convertStringToArray(char* str, char *delim ,char** arr)
     int i;
     char *pWord;
     /* split the elements by space delimeter */ 
-    pWord=strtok(str,delim);
+    char *cloneStr = malloc(sizeof(char*)*strlen(str));
+    strcpy(cloneStr,str);
+    pWord=strtok(cloneStr,delim);
     i=0;
     while(pWord!=NULL)
     {

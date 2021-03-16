@@ -55,7 +55,7 @@ int firstTransition (char *fileName)
                 addAllocationDataToMemoryImage(memoryImageList, instPos->words[1], instPos->words[2], IC);
                 if(strcmp(instPos->words[1],".string")==0)
                 {   
-                    int length = strlen(substr(instPos->words[2],1,strlen(instPos->words[2]))) + 1;
+                    int length = strlen(substr(instPos->words[2],1,strlen(instPos->words[2])));
                     DC = DC + length;
                     IC = IC + length;
                 }
@@ -63,7 +63,7 @@ int firstTransition (char *fileName)
                     if(strcmp(instPos->words[1],".data")==0)
                     {
                         int length =  amountOfChars(instPos->words[2], ',');
-                        if (length!=0)
+                        if (length==0)
                             length = 1;
                         else
                             length++;
