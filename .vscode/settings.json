@@ -3,6 +3,8 @@
         "typeinfo": "c",
         "structs.h": "c",
         "constants.h": "c",
-        "validations.h": "c"
+        "validations.h": "c",
+        "symbolstable.h": "c",
+        "memoryimage.h": "c"
     }
 }

@@ -8,4 +8,5 @@
     boolean isDataAllocation(char *word); /*The function return true if the word is allocation data word.*/
     boolean isExternalOrEntry(char *word);
     addresingType checkTypeOfAddressingModes(char *word);
+    boolean isMethod(char *str);
 #endif 

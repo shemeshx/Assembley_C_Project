@@ -16,6 +16,7 @@ enum { false, true };
 #define METHODS_AMOUNT 16
 
 #define METHOD_NOT_FOUND -1
+#define SYMBOL_NOT_FOUND NULL
 
 #define ERROR_WRONG_ADDRESSINGMODE -2
 

@@ -8,6 +8,7 @@
 #include "../Headers/Validations.h"
 #include "../Headers/SymbolsTable.h"
 #include "../Headers/MemoryImage.h"
+#include "../Headers/SecondTransition.h"
 int firstTransition (char *fileName)
 {
     int lineN=1;
@@ -50,7 +51,7 @@ int firstTransition (char *fileName)
         {
             if(labelFlag)
             {   
-                symbolNode = createSymbolNode(instPos->words[0], DC, instPos->words[1]);
+                symbolNode = createSymbolNode(instPos->words[0], IC, instPos->words[1]);
                 addNewSymbol(symbolTable,symbolNode);
                 addAllocationDataToMemoryImage(memoryImageList, instPos->words[1], instPos->words[2], IC);
                 if(strcmp(instPos->words[1],".string")==0)
@@ -164,14 +165,14 @@ int firstTransition (char *fileName)
 
 
     /*TODO - move to other transition*/
-    freeSymbolTable(symbolTable);
-    freeMemoryImage(memoryImageList);
+    
     if (fclose(insFile))
     {
         perror("cannot close file!");
         return EXIT_FAILURE;
     }
+    
+    return secondTransition(listOfInstructions,symbolTable,memoryImageList);
 
-    return(EXIT_SUCCESS);
 }
 

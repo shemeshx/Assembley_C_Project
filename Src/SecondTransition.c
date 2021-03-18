@@ -8,16 +8,62 @@
 #include "../Headers/Validations.h"
 #include "../Headers/SymbolsTable.h"
 #include "../Headers/MemoryImage.h"
-
+#include "../Headers/SecondTransition.h"
 int secondTransition(instNode *listOfInstructions, symbolTableList *symbolTable, memoryImageList *memoryImageList)
 {
-    instNode* posInstr = listOfInstructions;
-    boolean labelFlag=false;
-    while(posInstr != NULL)
+    instNode* instPos = listOfInstructions;
+    memoryNode* memoryNode = memoryImageList->head;
+    int startIndex=0;
+    printf("\n\t\tsecond transition started \n\n");
+    while(instPos != NULL)
     {
+        if(isLabel(instPos->words[startIndex]))
+            startIndex++;
+        if(strcmp(instPos->words[startIndex],".extern") == 0 || 
+           strcmp(instPos->words[startIndex],".string") == 0 ||
+           strcmp(instPos->words[startIndex],".data") == 0)
+                goto STEP1;
+        if(strcmp(instPos->words[startIndex],".entry") == 0)
+        {
+            if(!isExistLabel(symbolTable,instPos->words[startIndex+1]))
+            {
+                perror("symbol not found when try to add entry attribute!");
+                return ERROR_ARGUMENT_NOT_VALID;
+            }
+            addEntryAttrToLabel(symbolTable,instPos->words[startIndex+1]);
+            goto STEP1;    
+        }
+        else
+        {
+            int i;
+            char** operands;
+            struct memoryNode *tmpMemoryNode = memoryNode->next;
+            int NofOperands = amountOfChars(instPos->words[instPos->amountOfWords-1],',')+1;
 
+            if(isMethod(instPos->words[instPos->amountOfWords-1])) goto STEP1;
 
-
-        posInstr=posInstr->next;
+            operands = malloc(sizeof(char**)* (NofOperands+1));
+            convertStringToArray(instPos->words[instPos->amountOfWords-1] ,"," ,operands);
+            for (i = 0; i < NofOperands; i++, tmpMemoryNode=tmpMemoryNode->next)
+            {
+                if(tmpMemoryNode->type=='?' || tmpMemoryNode->type=='L')
+                {
+                    
+                }
+                
+            }
+            for (i = 0; i < NofOperands; i++){
+                memoryNode = memoryNode->next;
+            }
+        }
+        STEP1:startIndex=0;
+        instPos=instPos->next;
+        memoryNode=memoryNode->next;
     }
+    printf("\n\n");
+    printSymbolList(symbolTable);
+
+    freeSymbolTable(symbolTable);
+    freeMemoryImage(memoryImageList);
+    return EXIT_SUCCESS;
 }

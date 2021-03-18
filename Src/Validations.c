@@ -86,3 +86,15 @@ addresingType checkTypeOfAddressingModes(char *word)
     return ERROR_ARGUMENT_NOT_VALID;
 
 }
+
+boolean isMethod(char *str)
+{
+    methods* methods = buildMethods();
+    int i;
+    for (i = 0; i < METHODS_AMOUNT; i++)
+    {
+        if(strcmp(methods->name[i],str)==0)
+            return true;
+    }
+    return false;
+}

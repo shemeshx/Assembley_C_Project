@@ -78,3 +78,47 @@ void printSymbolList(symbolTableList *list)
         printf("]\n");
     }
 }
+
+boolean isExistLabel(symbolTableList *list,char* label)
+{
+    symbolNode *pos = list->head;
+    while(pos!=NULL)
+    {
+        if(strcmp(pos->symbol,label)==0)
+            return true;
+        pos=pos->next;
+    }
+    return false;
+}
+void addEntryAttrToLabel(symbolTableList *list, char* label)
+{
+    symbolNode *pos = list->head;
+    
+    while(pos!=NULL)
+    {
+        if(strcmp(pos->symbol,label)==0)
+        {
+            pos->attributes=realloc(pos->attributes,sizeof(char**)*(pos->nOfAtt++ + 1));
+            pos->attributes[pos->nOfAtt-1] = malloc(sizeof(char*)*strlen("entry"));
+            strcpy(pos->attributes[pos->nOfAtt-1],"entry");
+            return;
+        }
+        pos=pos->next;
+    }
+}
+
+
+symbolNode* getSymbolNodeByName(symbolTableList *list, char* label)
+{
+    symbolNode *pos = list->head;
+    
+    while(pos!=NULL)
+    {
+        if(strcmp(pos->symbol,label)==0)
+        {
+            return pos;
+        }
+        pos=pos->next;
+    }
+    return SYMBOL_NOT_FOUND;
+}
