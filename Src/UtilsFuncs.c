@@ -8,7 +8,7 @@ This file contains all the utilites functions for the project.
 #include "../Headers/Structs.h"
 #include "../Headers/Constants.h"
 #include "../Headers/UtilsFuncs.h"
-
+#include "../Headers/Validations.h"
 
 void trimSpace(char *str);/*Help function to trim spaces*/
 void convertStringToArray(char* str,char *delim ,char** arr); /* this function converts string to an array by using given delimeter */
@@ -23,6 +23,8 @@ instNode* buildInstructionsList(FILE *insFile)
     {
         instNode *node = malloc(sizeof(instNode));
         trimSpace(line);
+        if(isBlankOrCommentLine(line))
+            continue;
         node->amountOfWords=amountOfSpaces(line)+1;
         node->words = malloc(sizeof(char**) * node->amountOfWords);
         convertStringToArray(line, " \t",node->words);

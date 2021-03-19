@@ -46,11 +46,26 @@ int secondTransition(instNode *listOfInstructions, symbolTableList *symbolTable,
             convertStringToArray(instPos->words[instPos->amountOfWords-1] ,"," ,operands);
             for (i = 0; i < NofOperands; i++, tmpMemoryNode=tmpMemoryNode->next)
             {
+                struct symbolNode *currSymbol;
                 if(tmpMemoryNode->type=='?' || tmpMemoryNode->type=='L')
                 {
-                    
+                    switch (tmpMemoryNode->type)
+                    {
+                    case '?':
+                        currSymbol = getSymbolNodeByName(symbolTable,operands[i]);
+                        if(strcmp(currSymbol->attributes[0],"external")==0)
+                            tmpMemoryNode->type='E';
+                        else
+                            tmpMemoryNode->type='R';
+                        tmpMemoryNode->value=currSymbol->value;
+                        break;
+                    case 'L':
+                        currSymbol = getSymbolNodeByName(symbolTable,substr(operands[i],1,strlen(operands[i])));
+                        tmpMemoryNode->type='A';
+                        tmpMemoryNode->value = currSymbol->value - (memoryNode->adress + 1);
+                        break;
+                    }
                 }
-                
             }
             for (i = 0; i < NofOperands; i++){
                 memoryNode = memoryNode->next;
@@ -62,6 +77,8 @@ int secondTransition(instNode *listOfInstructions, symbolTableList *symbolTable,
     }
     printf("\n\n");
     printSymbolList(symbolTable);
+    printf("\n\n");
+    printMemoryList(memoryImageList);
 
     freeSymbolTable(symbolTable);
     freeMemoryImage(memoryImageList);

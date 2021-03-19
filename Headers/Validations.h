@@ -9,4 +9,5 @@
     boolean isExternalOrEntry(char *word);
     addresingType checkTypeOfAddressingModes(char *word);
     boolean isMethod(char *str);
+    boolean isBlankOrCommentLine(char *str);
 #endif 

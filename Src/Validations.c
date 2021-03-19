@@ -98,3 +98,12 @@ boolean isMethod(char *str)
     }
     return false;
 }
+
+boolean isBlankOrCommentLine(char *str)
+{
+    if(strcmp(str,"\n")==0)
+        return true;
+    else if(*str == ';')
+        return true;
+    return false;
+}

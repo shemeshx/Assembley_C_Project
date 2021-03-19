@@ -11,7 +11,7 @@ SymbolsTable.o: ${HEADERS}Constants.h ${HEADERS}Structs.h ${HEADERS}UtilsFuncs.h
 	gcc -c -ansi -Wall -pedantic ${SRC}SymbolsTable.c -o SymbolsTable.o
 MemoryImage.o: ${HEADERS}Constants.h ${HEADERS}Structs.h ${HEADERS}UtilsFuncs.h
 	gcc -c -ansi -Wall -pedantic ${SRC}MemoryImage.c -o MemoryImage.o
-UtilsFuncs.o: ${SRC}UtilsFuncs.c ${HEADERS}Constants.h ${HEADERS}Structs.h ${HEADERS}UtilsFuncs.h
+UtilsFuncs.o: ${SRC}UtilsFuncs.c ${HEADERS}Constants.h ${HEADERS}Structs.h ${HEADERS}UtilsFuncs.h ${HEADERS}Validations.h
 	gcc -c -ansi -Wall -pedantic ${SRC}UtilsFuncs.c -o UtilsFuncs.o
 SecondTransition.o: ${SRC}SecondTransition.c ${HEADERS}Constants.h ${HEADERS}UtilsFuncs.h ${HEADERS}SymbolsTable.h ${HEADERS}SecondTransition.h
 	gcc -c -ansi -Wall -pedantic ${SRC}SecondTransition.c -o SecondTransition.o
