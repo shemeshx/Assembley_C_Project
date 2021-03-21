@@ -24,7 +24,7 @@ exportFile* secondTransition(instNode *listOfInstructions, char* fileName, symbo
 
     /*initialize the structure.*/
     outsourceData = initOutsourceData();
-    
+
     printf("\n\t\tsecond transition started \n\n");
     while(instPos != NULL)
     {
@@ -122,15 +122,13 @@ exportFile* secondTransition(instNode *listOfInstructions, char* fileName, symbo
         return NULL;
     else
         {
-            exportFile *exportFile = malloc(sizeof(exportFile));
+            exportFile *exportFile = malloc(sizeof(struct exportFile));
             exportFile->DCF = DC;
             exportFile->ICF = ICF;
             exportFile->memoryImage=memoryImageList;
             exportFile->outsource=outsourceData;
             exportFile->symbolTable=symbolTable;
-            printf("%s",fileName);
-            /*exportFile->fileName = malloc(sizeof(char) *(strlen(fileName)+1));
-            strcpy(exportFile->fileName,fileName);*/
+            exportFile->fileName=fileName;
             return exportFile;
         }
 }

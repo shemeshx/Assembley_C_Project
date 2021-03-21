@@ -10,6 +10,6 @@ char indxOfMethod(methods *methods,  char *method);
 char* substr(char *src, int m, int n); /*The function gets string and returns a substring from m index to n (excluding n).*/
 void convertStringToArray( char* str, char *delim ,char** arr);
 int amountOfChars(char* str, char c);
-void createFiles(exportFile *file,char *name);
+void createFiles(exportFile *file);
 int char_index(char c, char *string);
 #endif 

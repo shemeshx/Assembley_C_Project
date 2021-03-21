@@ -180,21 +180,50 @@ char* substr(char *src, int m, int n)
     return dest - len;
 }
 
-void createFiles(exportFile *file,char* name)
+void createFiles(exportFile *file)
 {
     FILE *obFile;
     FILE *entFile;
     FILE *extFile;
 
     memoryNode *memoryPos =file->memoryImage->head;
+    int i;
+    char *extFileName,*entFileName,*obFileName;
 
-    obFile=fopen(strcat(name,".ob"),"w+");
-    fprintf(obFile,"\t%d %d",file->ICF,file->DCF);
+    obFileName = malloc(sizeof(char) * strlen(file->fileName));
+    entFileName = malloc(sizeof(char) * strlen(file->fileName));
+    extFileName = malloc(sizeof(char) * strlen(file->fileName));
+   
+    strcpy(obFileName,file->fileName);
+    strcpy(entFileName,file->fileName);
+    strcpy(extFileName,file->fileName);
+
+    strcat(obFileName,".ob");
+    strcat(entFileName,".ent");
+    strcat(extFileName,".ext");
+
+    obFile=fopen(obFileName,"w+");
+    fprintf(obFile,"\t%d %d\n",file->ICF,file->DCF);
     while(memoryPos!=NULL)
     {
-        fprintf(obFile,"0%d %x %c",memoryPos->adress,memoryPos->value,memoryPos->type);
+        fprintf(obFile,"0%d %03X %c\n",memoryPos->adress,memoryPos->value & 0xfff,memoryPos->type);
         memoryPos=memoryPos->next;
     }
+    fclose(obFile);
+
+    obFile=fopen(extFileName,"w+");
+    for (i = 0; i < file->outsource->amountExterns; i++)
+    {
+        fprintf(obFile,"%s 0%d\n",file->outsource->arrExtern[i]->name,file->outsource->arrExtern[i]->address);
+    }
+    fclose(obFile);
+
+    obFile=fopen(entFileName,"w+");
+    for (i = 0; i < file->outsource->amountEntries; i++)
+    {
+        fprintf(obFile,"%s 0%d\n",file->outsource->arrEntry[i]->name,file->outsource->arrEntry[i]->address);
+    }
+    fclose(obFile);
 }
 
 int char_index(char c, char *string) {

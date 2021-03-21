@@ -41,10 +41,8 @@ exportFile* firstTransition (char *fileName)
     char** operands;
     char i;
 
-    char fileNameNoExt[char_index('.',fileName)];
-    memcpy(fileNameNoExt, &fileName[0],char_index('.',fileName));
-    fileNameNoExt[char_index('.',fileName)+1]='\0';
-    printf("%s",fileNameNoExt);
+    char *fileNameNoExt;
+    fileNameNoExt = substr(fileName,0,char_index('.',fileName));
 
     /*initialize the structures.*/
     symbolTable = initSymbolTable();
@@ -198,6 +196,7 @@ exportFile* firstTransition (char *fileName)
         perror("cannot close file!");
         return NULL;
     }
+
 
     /*start second transition*/
     return secondTransition(listOfInstructions,fileNameNoExt,symbolTable,memoryImageList,ICF-100,DC,errorFlag);
