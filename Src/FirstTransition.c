@@ -1,4 +1,6 @@
-/*This file contain the first transition method.*/
+/*
+    This file contain the first transition method.
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

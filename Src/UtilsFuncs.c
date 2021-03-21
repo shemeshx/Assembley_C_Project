@@ -9,11 +9,22 @@ This file contains all the utilites functions for the project.
 #include "../Headers/Constants.h"
 #include "../Headers/UtilsFuncs.h"
 #include "../Headers/Validations.h"
+#include "../Headers/MemoryImage.h"
+#include "../Headers/SymbolsTable.h"
+#include "../Headers/EntryAndExtern.h"
+
+/*
+    Utilites functions.
+*/
 
 void trimSpace(char *str);/*Help function to trim spaces*/
 void convertStringToArray(char* str,char *delim ,char** arr); /* this function converts string to an array by using given delimeter */
 char amountOfSpaces(char* line); /*this function returns the amount of spaces */
 
+
+/*
+    the function return new list of instructions from a file.
+*/
 instNode* buildInstructionsList(FILE *insFile)
 {
     char line[MAX_LINE_LEN] ={0};/*varible for reading the lines.*/
@@ -41,6 +52,9 @@ instNode* buildInstructionsList(FILE *insFile)
     return head;
 }
 
+/*
+    Build the methods struct.
+*/
 methods* buildMethods()
 {
     methods *strc;
@@ -102,6 +116,10 @@ methods* buildMethods()
     return strc;
 }
 
+/*
+    The function return the index of method.
+    if not exist return an error.
+*/
 char indxOfMethod(methods *methods,char *method)
 {
     char i;
@@ -125,6 +143,9 @@ void trimSpace(char *str)
 
 }
 
+/*
+    convert a string to array by delimeter
+*/
 void convertStringToArray(char* str, char *delim ,char** arr)
 {
     int i;
@@ -151,6 +172,9 @@ char amountOfSpaces(char* line){
   return amountOfSpaces;           
 }
 
+/*
+    return amount of characters of given character c in string.
+*/
 int amountOfChars(char* str, char c){
   int i;
   char amount=0; 
@@ -160,6 +184,10 @@ int amountOfChars(char* str, char c){
   return amount;           
 }
 
+
+/*
+    return a substring from m to n (not including n) position.
+*/
 char* substr(char *src, int m, int n)
 {
     int len, i;
@@ -180,6 +208,9 @@ char* substr(char *src, int m, int n)
     return dest - len;
 }
 
+/*
+    The function create the ob,ext and ent files.
+*/
 void createFiles(exportFile *file)
 {
     FILE *obFile;
@@ -222,8 +253,12 @@ void createFiles(exportFile *file)
         fprintf(obFile,"%s 0%d\n",file->outsource->arrEntry[i]->name,file->outsource->arrEntry[i]->address);
     }
     fclose(obFile);
+
 }
 
+/*
+    The function return the index of character in a string
+*/
 int char_index(char c, char *string) {
     int i;
     for (i = 0; string[i] != '\0'; i++)
@@ -231,4 +266,14 @@ int char_index(char c, char *string) {
             return i;
 
     return ERROR_ARGUMENT_NOT_VALID;
+}
+
+/*
+    free all the structs
+*/
+void freeAllData(exportFile *file)
+{
+    freeMemoryImage(file->memoryImage);
+    freeSymbolTable(file->symbolTable);
+    freeOutsourceData(file->outsource);
 }

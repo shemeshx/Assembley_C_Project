@@ -4,12 +4,19 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+/*
+    Validations functions.
+*/
+
+
+/*The function returns true if the word is a label.*/
 boolean isLabel(char *word)
 {
     if(word[strlen(word)-1]==':' && strlen(word)<=MAX_LENGTH_LABEL)
         return true;
     return false;
 }
+
 
 boolean isContainLettersAndNumbers(char *word)
 {
@@ -32,6 +39,8 @@ boolean isContainLettersAndNumbers(char *word)
     }
     return check;
 }
+
+/*The functions return true if the word is allocation data word.*/
 boolean isDataAllocation(char *word)
 {
     if(strcmp(word,".string")==0 || strcmp(word,".data")==0)
@@ -39,6 +48,7 @@ boolean isDataAllocation(char *word)
     return false;
 }
 
+ /*the function returns true if the given word uis extern or entry*/
 boolean isExternalOrEntry(char *word)
 {
     if(strcmp(word,".extern")==0 || strcmp(word,".entry")==0)
@@ -46,6 +56,7 @@ boolean isExternalOrEntry(char *word)
     return false;
 }
 
+/*check if string is a valid int*/
 boolean is_valid_int(char *str)
 {
    if (*str == '-')
@@ -64,12 +75,15 @@ boolean is_valid_int(char *str)
    return true;
 }
 
+/*check if the number is valid with 12 bits.*/    
 boolean isValidNumber(int num)
 {
     if(num<=BIGGEST_12_BITS_NUM && num>=SMALLEST_12_BITS_NUM)
         return true;
     return false;
 }
+
+
 boolean isRegister(char *word)
 {
     if(strlen(word)!=2)
@@ -80,6 +94,8 @@ boolean isRegister(char *word)
         return false;
     return true;
 }
+
+/*return the type of addressing,*/
 addresingType checkTypeOfAddressingModes(char *word)
 {
     if(word[0]=='#' && (is_valid_int(substr(word,1,strlen(word)))==true && isValidNumber(atoi(substr(word,1,strlen(word))))))
@@ -94,6 +110,7 @@ addresingType checkTypeOfAddressingModes(char *word)
 
 }
 
+/*check if a string is a method*/
 boolean isMethod(char *str)
 {
     methods* methods = buildMethods();
@@ -106,6 +123,7 @@ boolean isMethod(char *str)
     return false;
 }
 
+/*check if a line is blank or comment*/
 boolean isBlankOrCommentLine(char *str)
 {
     if(strcmp(str,"\n")==0)
@@ -115,7 +133,7 @@ boolean isBlankOrCommentLine(char *str)
     return false;
 }
 
-
+/*check if the arguments contain a valid file*/
 boolean isFileValid(int argc, char **argv)
 {
     FILE *fptr;

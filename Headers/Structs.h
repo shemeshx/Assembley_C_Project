@@ -59,6 +59,9 @@ typedef struct memoryImageList {
 }memoryImageList;
 
 typedef struct methods{
+    /*
+    This struct contains the methods (move,lea,cmp, etc...)
+    */
     char **name;
     char *funct;
     char *opcode;
@@ -66,16 +69,25 @@ typedef struct methods{
 
 
 typedef struct externVal{
+    /*
+    This struct represents a extenal value.
+    */
     char* name;
     int address;
 }externVal;
 
 typedef struct entryVal{
+    /*
+    This struct represents a entry value.
+    */
     char* name;
     int address;
 }entryVal;
 
 typedef struct outsourceData{
+    /*
+    This struct conatin 2 arrays of entries and externs datas.
+    */
     entryVal **arrEntry;
     externVal **arrExtern;
     int amountEntries;
@@ -84,6 +96,9 @@ typedef struct outsourceData{
 
 
 typedef struct exportFile{
+    /*
+    The struct contain all the relevant information to create the files.
+    */
     int ICF;
     int DCF;
     outsourceData *outsource;
