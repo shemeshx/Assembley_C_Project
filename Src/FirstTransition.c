@@ -55,7 +55,7 @@ exportFile* firstTransition (char *fileName)
     /*open the file*/
     if((insFile=fopen(fileName,"r"))==NULL)
     {
-        perror("cannot open file!");
+        perror("cannot open file!\n");
         return NULL;
     }
 
@@ -129,7 +129,7 @@ exportFile* firstTransition (char *fileName)
         methodIndex = indxOfMethod(methods,instPos->words[labelFlag]);
         if (methodIndex==METHOD_NOT_FOUND)
         {   
-            printf("ERROR : method not exists at line %d",lineN);
+            printf("ERROR : method not exists at line %d,\n",lineN);
             errorFlag=true;
         }
 
@@ -137,7 +137,7 @@ exportFile* firstTransition (char *fileName)
         switch (instPos->amountOfWords)
         {
         case 1:
-            printf("ERROR : Wrong number of line words at line %d",lineN);
+            printf("ERROR : Wrong number of line words at line %d.\n",lineN);
             errorFlag=true;
             break;
         case 2: /*there are two options -  */
@@ -195,7 +195,7 @@ exportFile* firstTransition (char *fileName)
     /*close file*/
     if (fclose(insFile))
     {
-        perror("cannot close file!");
+        perror("cannot close file!\n");
         return NULL;
     }
 

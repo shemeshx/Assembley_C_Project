@@ -28,7 +28,7 @@
     boolean isBlankOrCommentLine(char *str);
     
     /*check if the arguments contain a valid file*/
-    boolean isFileValid(int argc, char **argv);
+    boolean isFileValid(char *file);
     
     /*check if the number is valid with 12 bits.*/
     boolean isValidNumber(int num);

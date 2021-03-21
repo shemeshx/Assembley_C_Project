@@ -1,10 +1,10 @@
 HEADERS=Headers/
 SRC=Src/
-main:main.o firstTransition.o SecondTransition.o UtilsFuncs.o Validations.o SymbolsTable.o MemoryImage.o EntryAndExtern.o
-	gcc -g -ansi -Wall -pedantic main.o Validations.o UtilsFuncs.o SymbolsTable.o firstTransition.o MemoryImage.o SecondTransition.o EntryAndExtern.o -o main 
-	rm main.o firstTransition.o UtilsFuncs.o Validations.o SymbolsTable.o MemoryImage.o SecondTransition.o EntryAndExtern.o
-main.o: ${SRC}main.c ${HEADERS}FirstTransition.h
-	gcc -c -ansi -Wall -pedantic ${SRC}main.c -o main.o
+assembler:assembler.o firstTransition.o SecondTransition.o UtilsFuncs.o Validations.o SymbolsTable.o MemoryImage.o EntryAndExtern.o
+	gcc -g -ansi -Wall -pedantic assembler.o Validations.o UtilsFuncs.o SymbolsTable.o firstTransition.o MemoryImage.o SecondTransition.o EntryAndExtern.o -o assembler 
+	rm assembler.o firstTransition.o UtilsFuncs.o Validations.o SymbolsTable.o MemoryImage.o SecondTransition.o EntryAndExtern.o
+assembler.o: ${SRC}assembler.c ${HEADERS}FirstTransition.h
+	gcc -c -ansi -Wall -pedantic ${SRC}assembler.c -o assembler.o
 Validations.o: ${SRC}Validations.c ${HEADERS}Constants.h ${HEADERS}Structs.h
 	gcc -c -ansi -Wall -pedantic ${SRC}Validations.c -o Validations.o
 SymbolsTable.o: ${HEADERS}Constants.h ${HEADERS}Structs.h ${HEADERS}UtilsFuncs.h

@@ -126,22 +126,21 @@ boolean isMethod(char *str)
 /*check if a line is blank or comment*/
 boolean isBlankOrCommentLine(char *str)
 {
-    if(strcmp(str,"\n")==0)
+    if(strlen(str)<2 || *str==' ' || *str=='\t' || *str=='\r')
         return true;
-    else if(*str == ';')
+    if(*str == ';')
+        return true;
+    if(strcmp(str,"\n\r")==0)
         return true;
     return false;
 }
 
 /*check if the arguments contain a valid file*/
-boolean isFileValid(int argc, char **argv)
+boolean isFileValid(char *file)
 {
     FILE *fptr;
 
-    if(argc != 2)
-        return false;
-
-    fptr = fopen(argv[argc-1], "r");
+    fptr = fopen(file, "r");
     if (fptr == NULL)
         return false;
 

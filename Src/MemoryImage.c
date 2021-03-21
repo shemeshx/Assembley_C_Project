@@ -58,7 +58,11 @@ void addNewMemoryNode(memoryImageList *list, memoryNode *newNode)
 void freeMemoryImage(memoryImageList *list)
 {
     memoryNode* tmp;
-    memoryNode* head = list->head;
+    memoryNode* head;
+    if(list!=NULL)
+        head = list->head;
+    else
+        return;
     while (head != NULL)
     {
         tmp = head;

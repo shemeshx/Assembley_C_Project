@@ -61,17 +61,24 @@ void addNewSymbol(symbolTableList *list, symbolNode *newNode)
 void freeSymbolTable(symbolTableList *list)
 {
     symbolNode* tmp;
-    symbolNode* head = list->head;
+    symbolNode* head;
+    if(list!=NULL)
+        head = list->head;
+    else
+        return;
     while (head != NULL)
     {
         int i=0;
         tmp = head;
         head = head->next;
         for(;i<tmp->nOfAtt;i++) {
-            free(tmp->attributes[i]);
+            if(tmp->attributes[i]!=NULL)
+                free(tmp->attributes[i]);
         }
-        free(tmp->attributes);
-        free(tmp->symbol);
+        if(tmp->attributes!=NULL)
+            free(tmp->attributes);
+        if(tmp->symbol!=NULL)
+            free(tmp->symbol);
         free(tmp);
     }
 }

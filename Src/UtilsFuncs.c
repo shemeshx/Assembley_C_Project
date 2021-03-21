@@ -20,7 +20,7 @@ This file contains all the utilites functions for the project.
 void trimSpace(char *str);/*Help function to trim spaces*/
 void convertStringToArray(char* str,char *delim ,char** arr); /* this function converts string to an array by using given delimeter */
 char amountOfSpaces(char* line); /*this function returns the amount of spaces */
-
+char* strip_extra_spaces(char* str);/*remove extra spaces between words*/
 
 /*
     the function return new list of instructions from a file.
@@ -33,12 +33,13 @@ instNode* buildInstructionsList(FILE *insFile)
     while (fgets(line, MAX_LINE_LEN, insFile))
     {
         instNode *node = malloc(sizeof(instNode));
-        trimSpace(line);
+        strcpy(line,strip_extra_spaces(line));
         if(isBlankOrCommentLine(line))
             continue;
         node->amountOfWords=amountOfSpaces(line)+1;
         node->words = malloc(sizeof(char**) * node->amountOfWords);
-        convertStringToArray(line, " \t",node->words);
+
+        convertStringToArray(line," ",node->words);
 
         node->next =NULL;
 
@@ -151,7 +152,7 @@ void convertStringToArray(char* str, char *delim ,char** arr)
     int i;
     char *pWord;
     /* split the elements by space delimeter */ 
-    char *cloneStr = malloc(sizeof(char*)*strlen(str));
+    char *cloneStr = malloc(sizeof(char*)*(strlen(str)));
     strcpy(cloneStr,str);
     pWord=strtok(cloneStr,delim);
     i=0;
@@ -227,9 +228,14 @@ void createFiles(exportFile *file)
     strcpy(entFileName,file->fileName);
     strcpy(extFileName,file->fileName);
 
-    strcat(obFileName,".ob");
-    strcat(entFileName,".ent");
-    strcat(extFileName,".ext");
+    strcat(obFileName,OUT_FILE);
+    strcat(entFileName,ENT_FILE);
+    strcat(extFileName,EXT_FILE);
+
+    /*remove old files*/
+    remove(obFileName);
+    remove(entFileName);
+    remove(extFileName);
 
     obFile=fopen(obFileName,"w+");
     fprintf(obFile,"\t%d %d\n",file->ICF,file->DCF);
@@ -240,14 +246,16 @@ void createFiles(exportFile *file)
     }
     fclose(obFile);
 
-    obFile=fopen(extFileName,"w+");
+    if(file->outsource->amountExterns!=0)
+        obFile=fopen(extFileName,"w+");
     for (i = 0; i < file->outsource->amountExterns; i++)
     {
         fprintf(obFile,"%s 0%d\n",file->outsource->arrExtern[i]->name,file->outsource->arrExtern[i]->address);
     }
     fclose(obFile);
 
-    obFile=fopen(entFileName,"w+");
+    if(file->outsource->amountEntries!=0)
+        obFile=fopen(entFileName,"w+");
     for (i = 0; i < file->outsource->amountEntries; i++)
     {
         fprintf(obFile,"%s 0%d\n",file->outsource->arrEntry[i]->name,file->outsource->arrEntry[i]->address);
@@ -273,7 +281,47 @@ int char_index(char c, char *string) {
 */
 void freeAllData(exportFile *file)
 {
-    freeMemoryImage(file->memoryImage);
-    freeSymbolTable(file->symbolTable);
-    freeOutsourceData(file->outsource);
+    if(file->memoryImage!=NULL)
+        freeMemoryImage(file->memoryImage);
+    if(file->symbolTable!=NULL)
+        freeSymbolTable(file->symbolTable);
+    if(file->outsource!=NULL)
+        freeOutsourceData(file->outsource);
+}
+
+char *strip_extra_spaces(char* str) {
+   char *p = str;
+    char *p2 = str;
+    while (*p != '\0')
+    {
+        if (*p == ' ')
+        {
+            if (*p != *str) 
+            {
+                *p2 = *p; 
+                p2++;
+                p++;
+            }
+            while (*p == ' ') 
+            {
+                p++;
+            }
+        }
+        else
+        {
+            *p2 = *p;
+            p2++;
+            p++;
+        }
+    }
+    if (*(p2 - 1) == ' ') 
+    {
+        p2--;
+    }
+    if(*(p2-1)=='\n')
+        *(p2-1) = '\0';
+    else
+        *p2 = '\0';
+
+    return str;
 }

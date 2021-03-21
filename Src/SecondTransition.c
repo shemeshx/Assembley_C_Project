@@ -29,48 +29,57 @@ exportFile* secondTransition(instNode *listOfInstructions, char* fileName, symbo
     struct symbolNode *currSymbol; /*points to current symbol by name(return by a method).*/
 
     /*initialize the structure.*/
+     
     outsourceData = initOutsourceData();
 
     printf("\n\t\tsecond transition started \n\n");
+
     while(instPos != NULL)
     {
         int i;
         char** operands;
         struct memoryNode *tmpMemoryNode;
         int NofOperands;
-
+         
         if(isLabel(instPos->words[startIndex])) /*step 2 - jump over the label word.*/
             startIndex++;
+         
         /*step 3 - skip string, data or extern instructions*/
         if(strcmp(instPos->words[startIndex],".string") == 0 ||
            strcmp(instPos->words[startIndex],".data") == 0)
-            goto STEP1_CODE;
+            goto STEP1;
         if(strcmp(instPos->words[startIndex],".extern")==0)
             goto STEP1;
         
         /*step 4+5 - for entry instruction, add attribute 'entry' to relevant symbol */
         if(strcmp(instPos->words[startIndex],".entry") == 0)
         {
-            if(!isExistLabel(symbolTable,instPos->words[startIndex+1]))
+            if(!isExistLabel(symbolTable,instPos->words[instPos->amountOfWords-1]))
             {
-                printf("ERROR:symbol '%s' not found when try to add entry attribute!",instPos->words[startIndex+1]);
+                errorFlag=true;
+                printf("ERROR:symbol '%s' not found when try to add entry attribute!\n",instPos->words[startIndex+1]);
+                goto STEP1;
             }
             addEntryAttrToLabel(symbolTable,instPos->words[startIndex+1]);
             currSymbol = getSymbolNodeByName(symbolTable,instPos->words[instPos->amountOfWords-1]);
             if(currSymbol == SYMBOL_NOT_FOUND)
-                printf("ERROR : symbol '%s' not declared!", instPos->words[instPos->amountOfWords-1]);
+            {
+                errorFlag=true;
+                printf("ERROR : symbol '%s' not declared!\n", instPos->words[instPos->amountOfWords-1]);
+                goto STEP1;
+            }
             goto STEP1;
         }
-        
+       
         /*step 6 - if there is a missing information about the 
                     memory instruction (address of label or jumping to an adress),
                     feel the relevant information.*/
-        tmpMemoryNode = memoryNode->next;
-        NofOperands = amountOfChars(instPos->words[instPos->amountOfWords-1],',')+1;
-
+        
         /*if it is only method with no operands*/
         if(isMethod(instPos->words[instPos->amountOfWords-1])) goto STEP1_CODE;
-    
+
+        tmpMemoryNode = memoryNode->next;
+        NofOperands = amountOfChars(instPos->words[instPos->amountOfWords-1],',')+1;
         operands = malloc(sizeof(char**)* (NofOperands+1));
         convertStringToArray(instPos->words[instPos->amountOfWords-1] ,"," ,operands);
         
@@ -82,6 +91,12 @@ exportFile* secondTransition(instNode *listOfInstructions, char* fileName, symbo
                 {
                 case '?': /*missing address*/
                     currSymbol = getSymbolNodeByName(symbolTable,operands[i]);
+                    if(currSymbol==SYMBOL_NOT_FOUND)
+                    {
+                        errorFlag=true;
+                        printf("ERROR: symbol %s not found!",currSymbol->symbol);
+                        goto STEP1_CODE2;
+                    }
                     if(strcmp(currSymbol->attributes[0],"external")==0) /*external*/
                     {
                         tmpMemoryNode->type='E';
@@ -93,12 +108,18 @@ exportFile* secondTransition(instNode *listOfInstructions, char* fileName, symbo
                     break;
                 case 'L': /*jump to relevant address*/
                     currSymbol = getSymbolNodeByName(symbolTable,substr(operands[i],1,strlen(operands[i])));
+                    if(currSymbol==SYMBOL_NOT_FOUND)
+                    {
+                        errorFlag=true;
+                        printf("ERROR: symbol %s not found!",currSymbol->symbol);
+                        goto STEP1_CODE2;
+                    }
                     tmpMemoryNode->type='A';
                     tmpMemoryNode->value = currSymbol->value - (memoryNode->adress + 1);
                     break;
                 }
             }
-            tmpMemoryNode=tmpMemoryNode->next;
+            STEP1_CODE2:tmpMemoryNode=tmpMemoryNode->next;
         }
         /*go to the next relevant row by pass the operands rows in memory image.*/
         for (i = 0; i < NofOperands; i++){
@@ -110,7 +131,8 @@ exportFile* secondTransition(instNode *listOfInstructions, char* fileName, symbo
     }
 
     /*set the entries*/
-    setEntries(outsourceData, symbolTable);
+    if(errorFlag==false)
+        setEntries(outsourceData, symbolTable);
 
 
     printSymbolList(symbolTable);
@@ -118,13 +140,8 @@ exportFile* secondTransition(instNode *listOfInstructions, char* fileName, symbo
     printMemoryList(memoryImageList);
     printf("\n\n");
     printOutsources(outsourceData);
-
-    /*free all the memories*/
-    /*freeOutsourceData(outsourceData);
-    freeSymbolTable(symbolTable);
-    freeMemoryImage(memoryImageList);*/
     
-    if(errorFlag)
+    if(errorFlag==true)
         return NULL;
     else
         {

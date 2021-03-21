@@ -36,4 +36,12 @@ enum {immediate, direct, relative, register_direct};
 /*type of outsource data*/
 typedef char outsourceType;
 enum {Extern,Entry};
+
+
+/*file extensions*/
+#define OUT_FILE ".ob"
+#define ENT_FILE ".ent"
+#define EXT_FILE ".ext"
+
+
 #endif
