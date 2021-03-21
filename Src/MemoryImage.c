@@ -54,6 +54,7 @@ void addAllocationDataToMemoryImage(memoryImageList *list , char *type, char *da
     {
         int i = 0;
         char *str = substr(data,1,strlen(data)-1); /*remove "" from the data */
+        
         while(i < strlen(str))
         {
             addNewMemoryNode(list, createMemoryImageNode(startAddress+i,(int)str[i],'A'));

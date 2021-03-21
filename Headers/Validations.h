@@ -10,4 +10,5 @@
     addresingType checkTypeOfAddressingModes(char *word);
     boolean isMethod(char *str);
     boolean isBlankOrCommentLine(char *str);
+    boolean isFileExists(char *path);
 #endif 

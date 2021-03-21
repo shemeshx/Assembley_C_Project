@@ -180,5 +180,19 @@ char* substr(char *src, int m, int n)
     return dest - len;
 }
 
+void createFiles(exportFile *file,char* name)
+{
+    FILE *obFile;
+    FILE *entFile;
+    FILE *extFile;
 
+    memoryNode *memoryPos =file->memoryImage->head;
 
+    obFile=fopen(strcat(name,".ob"),"w+");
+    fprintf(obFile,"\t%d %d",file->ICF,file->DCF);
+    while(memoryPos!=NULL)
+    {
+        fprintf(obFile,"0%d %x %c",memoryPos->adress,memoryPos->value,memoryPos->type);
+        memoryPos=memoryPos->next;
+    }
+}

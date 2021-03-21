@@ -3,6 +3,7 @@ This header contains all the structs in the project.
 */ 
 #ifndef STRUCTSH
 #define STRUCTSH
+#include "Constants.h"
 typedef struct instNode { 
     /*
     This struct contain a line as node.
@@ -62,5 +63,32 @@ typedef struct methods{
     char *funct;
     char *opcode;
 }methods;
+
+
+typedef struct externVal{
+    char* name;
+    int address;
+}externVal;
+
+typedef struct entryVal{
+    char* name;
+    int address;
+}entryVal;
+
+typedef struct outsourceData{
+    entryVal **arrEntry;
+    externVal **arrExtern;
+    int amountEntries;
+    int amountExterns;
+}outsourceData;
+
+
+typedef struct exportFile{
+    int ICF;
+    int DCF;
+    outsourceData *outsource;
+    symbolTableList *symbolTable;
+    memoryImageList *memoryImage;
+}exportFile;
 
 #endif

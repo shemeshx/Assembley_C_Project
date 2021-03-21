@@ -1,6 +1,6 @@
 #ifndef FIRSTTRANSITIONH
 #define FIRSTTRANSITIONH
-
-int firstTransition(char*);
+#include "Structs.h"
+exportFile* firstTransition(char*);
 
 #endif

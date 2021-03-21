@@ -9,6 +9,8 @@
         "type_traits": "c",
         "cmath": "c",
         "limits": "c",
-        "*.tcc": "c"
+        "*.tcc": "c",
+        "entryandextern.h": "c",
+        "firsttransition.h": "c"
     }
 }

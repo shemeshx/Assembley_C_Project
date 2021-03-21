@@ -6,7 +6,7 @@
 
 #define MAX_LINE_LEN 80
 
-#define TEMP_FILE "test.txt" /*TODO - need to be removed! replace with original input file.*/
+#define TEMP_FILE "test.ob" /*TODO - need to be removed! replace with original input file.*/
 
 #define SPACE_CHAR 32
 
@@ -21,7 +21,11 @@ enum { false, true };
 #define ERROR_WRONG_ADDRESSINGMODE -2
 
 #define ERROR_ARGUMENT_NOT_VALID -3
+
 typedef char addresingType;
 enum {immediate, direct, relative, register_direct};
 #define AMOUNT_OF_BITS_SRC_CODE 12
+
+typedef char outsourceType;
+enum {Extern,Entry};
 #endif

@@ -107,3 +107,17 @@ boolean isBlankOrCommentLine(char *str)
         return true;
     return false;
 }
+
+
+boolean isFileExists(char *path)
+{
+    FILE *fptr = fopen(path, "r");
+
+    if (fptr == NULL)
+        return false;
+
+    fclose(fptr);
+
+    return true;
+}
+
