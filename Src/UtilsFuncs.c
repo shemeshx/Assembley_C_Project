@@ -183,9 +183,7 @@ char* substr(char *src, int m, int n)
 void createFiles(exportFile *file)
 {
     FILE *obFile;
-    FILE *entFile;
-    FILE *extFile;
-
+  
     memoryNode *memoryPos =file->memoryImage->head;
     int i;
     char *extFileName,*entFileName,*obFileName;

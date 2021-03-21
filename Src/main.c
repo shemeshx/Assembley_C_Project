@@ -7,14 +7,11 @@
 #include "../Headers/UtilsFuncs.h"
 
 int main(int argc, char **argv) {
-   char *filename; 
    exportFile *file =NULL;
-   char *strr;
-   if(argc == 2){
-      if(isFileExists(argv[1])){
-         file = firstTransition(argv[1]); 
-      }
+   if(isFileValid(argc,argv)){
+      file = firstTransition(argv[argc-1]); 
    }
+
    if(file==NULL)
       return -1;
    else
@@ -22,5 +19,5 @@ int main(int argc, char **argv) {
       createFiles(file);
       return 0;
    }
-
+   
 }

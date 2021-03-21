@@ -10,5 +10,6 @@
     addresingType checkTypeOfAddressingModes(char *word);
     boolean isMethod(char *str);
     boolean isBlankOrCommentLine(char *str);
-    boolean isFileExists(char *path);
+    boolean isFileValid(int argc, char **argv);
+    boolean isValidNumber(int num);
 #endif 

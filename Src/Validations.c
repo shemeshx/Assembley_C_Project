@@ -3,10 +3,10 @@
 #include "../Headers/UtilsFuncs.h"
 #include <string.h>
 #include <ctype.h>
-
+#include <stdlib.h>
 boolean isLabel(char *word)
 {
-    if(word[strlen(word)-1]==':')
+    if(word[strlen(word)-1]==':' && strlen(word)<=MAX_LENGTH_LABEL)
         return true;
     return false;
 }
@@ -63,6 +63,13 @@ boolean is_valid_int(char *str)
    }
    return true;
 }
+
+boolean isValidNumber(int num)
+{
+    if(num<=BIGGEST_12_BITS_NUM && num>=SMALLEST_12_BITS_NUM)
+        return true;
+    return false;
+}
 boolean isRegister(char *word)
 {
     if(strlen(word)!=2)
@@ -75,13 +82,13 @@ boolean isRegister(char *word)
 }
 addresingType checkTypeOfAddressingModes(char *word)
 {
-    if(word[0]=='#' && (is_valid_int(substr(word,1,strlen(word)))==true))
+    if(word[0]=='#' && (is_valid_int(substr(word,1,strlen(word)))==true && isValidNumber(atoi(substr(word,1,strlen(word))))))
             return immediate;
     else if(word[0]=='%' && (isContainLettersAndNumbers(substr(word,1,strlen(word)))==true && strlen(word)<32) )
             return relative;
     else if(isRegister(word)==true)
             return register_direct;
-    else if(isContainLettersAndNumbers(word)==true && strlen(word)<32)   
+    else if(isContainLettersAndNumbers(word)==true && strlen(word)<=MAX_LENGTH_LABEL)   
         return direct;
     return ERROR_ARGUMENT_NOT_VALID;
 
@@ -109,10 +116,14 @@ boolean isBlankOrCommentLine(char *str)
 }
 
 
-boolean isFileExists(char *path)
+boolean isFileValid(int argc, char **argv)
 {
-    FILE *fptr = fopen(path, "r");
+    FILE *fptr;
 
+    if(argc != 2)
+        return false;
+
+    fptr = fopen(argv[argc-1], "r");
     if (fptr == NULL)
         return false;
 

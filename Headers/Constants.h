@@ -10,10 +10,15 @@
 
 #define SPACE_CHAR 32
 
+#define MAX_LENGTH_LABEL 32
+
 typedef int boolean;
 enum { false, true };
 
 #define METHODS_AMOUNT 16
+
+#define BIGGEST_12_BITS_NUM 4096
+#define SMALLEST_12_BITS_NUM -4095
 
 #define METHOD_NOT_FOUND -1
 #define SYMBOL_NOT_FOUND NULL
