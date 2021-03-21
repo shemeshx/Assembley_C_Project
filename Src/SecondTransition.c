@@ -10,7 +10,7 @@
 #include "../Headers/MemoryImage.h"
 #include "../Headers/EntryAndExtern.h"
 #include "../Headers/SecondTransition.h"
-exportFile* secondTransition(instNode *listOfInstructions, symbolTableList *symbolTable, memoryImageList *memoryImageList, int ICF, int DC, boolean errorFlag)
+exportFile* secondTransition(instNode *listOfInstructions, char* fileName, symbolTableList *symbolTable, memoryImageList *memoryImageList, int ICF, int DC, boolean errorFlag)
 {
     instNode* instPos = listOfInstructions;/*pos of the instruction list*/
 
@@ -128,6 +128,9 @@ exportFile* secondTransition(instNode *listOfInstructions, symbolTableList *symb
             exportFile->memoryImage=memoryImageList;
             exportFile->outsource=outsourceData;
             exportFile->symbolTable=symbolTable;
+            printf("%s",fileName);
+            /*exportFile->fileName = malloc(sizeof(char) *(strlen(fileName)+1));
+            strcpy(exportFile->fileName,fileName);*/
             return exportFile;
         }
 }

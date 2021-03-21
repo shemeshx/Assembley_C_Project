@@ -11,4 +11,5 @@ char* substr(char *src, int m, int n); /*The function gets string and returns a 
 void convertStringToArray( char* str, char *delim ,char** arr);
 int amountOfChars(char* str, char c);
 void createFiles(exportFile *file,char *name);
+int char_index(char c, char *string);
 #endif 

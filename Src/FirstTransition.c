@@ -41,6 +41,11 @@ exportFile* firstTransition (char *fileName)
     char** operands;
     char i;
 
+    char fileNameNoExt[char_index('.',fileName)];
+    memcpy(fileNameNoExt, &fileName[0],char_index('.',fileName));
+    fileNameNoExt[char_index('.',fileName)+1]='\0';
+    printf("%s",fileNameNoExt);
+
     /*initialize the structures.*/
     symbolTable = initSymbolTable();
     memoryImageList = initMemoryImageList();
@@ -195,7 +200,7 @@ exportFile* firstTransition (char *fileName)
     }
 
     /*start second transition*/
-    return secondTransition(listOfInstructions,symbolTable,memoryImageList,ICF-100,DC,errorFlag);
+    return secondTransition(listOfInstructions,fileNameNoExt,symbolTable,memoryImageList,ICF-100,DC,errorFlag);
 
 }
 

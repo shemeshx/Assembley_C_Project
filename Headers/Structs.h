@@ -89,6 +89,7 @@ typedef struct exportFile{
     outsourceData *outsource;
     symbolTableList *symbolTable;
     memoryImageList *memoryImage;
+    char *fileName;
 }exportFile;
 
 #endif

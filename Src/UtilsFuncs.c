@@ -196,3 +196,12 @@ void createFiles(exportFile *file,char* name)
         memoryPos=memoryPos->next;
     }
 }
+
+int char_index(char c, char *string) {
+    int i;
+    for (i = 0; string[i] != '\0'; i++)
+        if (string[i] == c)
+            return i;
+
+    return ERROR_ARGUMENT_NOT_VALID;
+}
