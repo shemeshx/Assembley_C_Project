@@ -190,10 +190,12 @@ exportFile* firstTransition (char *fileName)
     }
     
     
-    printMemoryList(memoryImageList);
+    /*printMemoryList(memoryImageList);
     printf("\n\n");
     printSymbolList(symbolTable);
-    
+    */
+
+   
     /*close file*/
     if (fclose(insFile))
     {

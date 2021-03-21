@@ -47,20 +47,19 @@ exportFile* secondTransition(instNode *listOfInstructions, char* fileName, symbo
         /*step 3 - skip string, data or extern instructions*/
         if(strcmp(instPos->words[startIndex],".string") == 0 ||
            strcmp(instPos->words[startIndex],".data") == 0)
-            goto STEP1;
+            goto STEP1_CODE;
         if(strcmp(instPos->words[startIndex],".extern")==0)
             goto STEP1;
         
         /*step 4+5 - for entry instruction, add attribute 'entry' to relevant symbol */
         if(strcmp(instPos->words[startIndex],".entry") == 0)
         {
-            if(!isExistLabel(symbolTable,instPos->words[instPos->amountOfWords-1]))
+            if(isExistLabel(symbolTable,instPos->words[instPos->amountOfWords-1])==false)
             {
                 errorFlag=true;
                 printf("ERROR:symbol '%s' not found when try to add entry attribute!\n",instPos->words[startIndex+1]);
                 goto STEP1;
             }
-            addEntryAttrToLabel(symbolTable,instPos->words[startIndex+1]);
             currSymbol = getSymbolNodeByName(symbolTable,instPos->words[instPos->amountOfWords-1]);
             if(currSymbol == SYMBOL_NOT_FOUND)
             {
@@ -68,6 +67,7 @@ exportFile* secondTransition(instNode *listOfInstructions, char* fileName, symbo
                 printf("ERROR : symbol '%s' not declared!\n", instPos->words[instPos->amountOfWords-1]);
                 goto STEP1;
             }
+            addEntryAttrToLabel(symbolTable,instPos->words[instPos->amountOfWords-1]);
             goto STEP1;
         }
        
@@ -77,9 +77,10 @@ exportFile* secondTransition(instNode *listOfInstructions, char* fileName, symbo
         
         /*if it is only method with no operands*/
         if(isMethod(instPos->words[instPos->amountOfWords-1])) goto STEP1_CODE;
-
+        
         tmpMemoryNode = memoryNode->next;
         NofOperands = amountOfChars(instPos->words[instPos->amountOfWords-1],',')+1;
+        
         operands = malloc(sizeof(char**)* (NofOperands+1));
         convertStringToArray(instPos->words[instPos->amountOfWords-1] ,"," ,operands);
         
@@ -128,19 +129,21 @@ exportFile* secondTransition(instNode *listOfInstructions, char* fileName, symbo
         STEP1_CODE:memoryNode=memoryNode->next;
         STEP1:startIndex=0;
         instPos=instPos->next;
+        
     }
-
+    
     /*set the entries*/
     if(errorFlag==false)
         setEntries(outsourceData, symbolTable);
 
 
-    printSymbolList(symbolTable);
+    /*printSymbolList(symbolTable);
     printf("\n\n");
     printMemoryList(memoryImageList);
     printf("\n\n");
     printOutsources(outsourceData);
-    
+    */
+   
     if(errorFlag==true)
         return NULL;
     else
@@ -154,4 +157,5 @@ exportFile* secondTransition(instNode *listOfInstructions, char* fileName, symbo
             exportFile->fileName=fileName;
             return exportFile;
         }
+        return NULL;
 }

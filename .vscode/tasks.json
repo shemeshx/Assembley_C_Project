@@ -3,17 +3,15 @@
         {
             "type": "cppbuild",
             "label": "C/C++: gcc build active file",
-            "command": "make",
-            "args": [],
-            // "-g",
-            //     "-Wall",
-            //     "-ansi",
-            //     "-pedantic",
-            //     "/home/idans/Desktop/Assembley_C_Project/Src/main.c",
-            //     "-o",
-            //     "/home/idans/Desktop/Assembley_C_Project/myprog"
+            "command": "/usr/bin/gcc",
+            "args": [
+                "-g",
+                "/home/idans/Desktop/Assembley_C_Project/Src/assembler.c",
+                "-o",
+                "/home/idans/Desktop/Assembley_C_Project/assembler"
+            ],
             "options": {
-                "cwd": "/home/idans/Desktop/Assembley_C_Project"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [
                 "$gcc"
