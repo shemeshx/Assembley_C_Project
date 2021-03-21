@@ -1,4 +1,6 @@
-/*This file contain the first transition method.*/
+/*
+    This file contain the first transition method.
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,54 +10,76 @@
 #include "../Headers/Validations.h"
 #include "../Headers/SymbolsTable.h"
 #include "../Headers/MemoryImage.h"
-int firstTransition (char *fileName)
+#include "../Headers/SecondTransition.h"
+exportFile* firstTransition (char *fileName)
 {
-    int lineN=1;
+    /*ICF - Instructions counter only, IC - Instructions counter of every move, DC - Data counter.*/
+    int ICF=100;
+    int IC=100;
+    int DC=0; 
 
-    int IC=100,DC=0; /*IC - Instructions counter, DC - Data counter.*/
+    boolean errorFlag = false;/*handle the errors*/
+
+    int lineN=1;/*count the lines*/
+
     FILE *insFile; /*Instructions file pointer.*/ 
-    instNode *listOfInstructions;
-    instNode *instPos;
-    boolean labelFlag;
-    symbolNode *symbolNode;
-    symbolTableList *symbolTable=NULL;
-    memoryNode *memoryNode;
-    memoryImageList *memoryImageList=NULL;
-    methods* methods;
-    char methodIndex;
+
+    instNode *listOfInstructions; /* List of the instructions*/
+    instNode *instPos; /*pos of the instruction list*;*/
+
+    boolean labelFlag;/*if there is a label*/
+
+    symbolNode *symbolNode;/*node to symbol table*/
+    symbolTableList *symbolTable=NULL;/*list of symbol table*/
+
+    memoryNode *memoryNode;/*node to memory rows*/
+    memoryImageList *memoryImageList=NULL;/*list of memory rows*/
+
+    methods* methods;/*methods structure*/
+    char methodIndex;/*handle the index of method*/
+
+    /*handle the operands of a row*/
     char NofOperands;
     char** operands;
     char i;
 
+    char *fileNameNoExt;
+    fileNameNoExt = substr(fileName,0,char_index('.',fileName));
+
+    /*initialize the structures.*/
     symbolTable = initSymbolTable();
     memoryImageList = initMemoryImageList();
     methods = buildMethods();
     
+
+    /*open the file*/
     if((insFile=fopen(fileName,"r"))==NULL)
     {
         perror("cannot open file!");
-        return EXIT_FAILURE;
+        return NULL;
     }
 
+    /*build the list from the file*/
     listOfInstructions = buildInstructionsList(insFile);
     instPos = listOfInstructions;     
 
     while(instPos!=NULL)
     { 
-        if(isLabel(instPos->words[0]))
+        if(isLabel(instPos->words[0])) /*step 4 - flag on*/
         {
             labelFlag=true;
         }
+        /*step 5 - Is it a string or a data instruction.*/
         if(isDataAllocation(instPos->words[0]) || isDataAllocation(instPos->words[1]))
         {
             if(labelFlag)
-            {   
-                symbolNode = createSymbolNode(instPos->words[0], DC, instPos->words[1]);
+            {/*step 6 + 7 - create a symbol node and add it to memory image*/   
+                symbolNode = createSymbolNode(instPos->words[0], IC, ".data");
                 addNewSymbol(symbolTable,symbolNode);
                 addAllocationDataToMemoryImage(memoryImageList, instPos->words[1], instPos->words[2], IC);
                 if(strcmp(instPos->words[1],".string")==0)
                 {   
-                    int length = strlen(substr(instPos->words[2],1,strlen(instPos->words[2]))) + 1;
+                    int length = strlen(substr(instPos->words[2],1,strlen(instPos->words[2])));
                     DC = DC + length;
                     IC = IC + length;
                 }
@@ -63,7 +87,7 @@ int firstTransition (char *fileName)
                     if(strcmp(instPos->words[1],".data")==0)
                     {
                         int length =  amountOfChars(instPos->words[2], ',');
-                        if (length!=0)
+                        if (length==0)
                             length = 1;
                         else
                             length++;
@@ -71,7 +95,7 @@ int firstTransition (char *fileName)
                         IC = IC + length;
                     }          
             }
-            else  /*no label*/
+            else  /*step 7 - there is no label*/
             {
                 addAllocationDataToMemoryImage(memoryImageList, instPos->words[0], instPos->words[1], IC);
                 if(strcmp(instPos->words[0],".data")==0) 
@@ -83,6 +107,7 @@ int firstTransition (char *fileName)
             }
             goto STEP2;
         }
+        /*step 8+9 - handle external or entry instruction*/
         else if(isExternalOrEntry(instPos->words[0]))
         {
             if(strcmp(instPos->words[0],".entry")==0)
@@ -94,25 +119,26 @@ int firstTransition (char *fileName)
                 goto STEP2;
             }
         }
-        /* step 11 */
+        /* step 11 - add the symbol as code type*/
         if(labelFlag)
         {
             symbolNode = createSymbolNode(instPos->words[0], IC, ".code");
             addNewSymbol(symbolTable,symbolNode);
         }
-        methodIndex = indxOfMethod(methods,instPos->words[labelFlag]);/* step 12 */
+        /* step 12 - search of method */
+        methodIndex = indxOfMethod(methods,instPos->words[labelFlag]);
         if (methodIndex==METHOD_NOT_FOUND)
         {   
-            perror("method not exists!!!");
-            return EXIT_FAILURE;
+            printf("ERROR : method not exists at line %d",lineN);
+            errorFlag=true;
         }
-        /* step 13 */ 
-        
+
+        /* step 13-16 - handle a code instructions line.*/ 
         switch (instPos->amountOfWords)
         {
         case 1:
-            perror("Wrong number of line words.");
-            return EXIT_FAILURE;
+            printf("ERROR : Wrong number of line words at line %d",lineN);
+            errorFlag=true;
             break;
         case 2: /*there are two options -  */
                 if(labelFlag) /*1. Label with method (no operands)*/
@@ -120,6 +146,7 @@ int firstTransition (char *fileName)
                     memoryNode = createMemoryImageNode(IC,getCodeLine(methods, instPos->words[1] ,NULL, 0),'A');
                     addNewMemoryNode(memoryImageList,memoryNode);
                     IC++;
+                    ICF++;
                 }
                 else /*2.method with operands (no label)*/
                 {
@@ -129,28 +156,32 @@ int firstTransition (char *fileName)
                     memoryNode = createMemoryImageNode(IC,getCodeLine(methods, instPos->words[0] ,operands, NofOperands),'A');
                     addNewMemoryNode(memoryImageList,memoryNode);
                     IC++;
+                    ICF++;
                     for (i = 0 ; i < NofOperands; i++)
                     {
                         memoryNode = createOperandNodeForMemory(IC++,*(operands+i));
                         addNewMemoryNode(memoryImageList,memoryNode);
+                        ICF++;
                     }
                 }
             break;
-        case 3: /* line contain -> label: method operands*/
+        case 3: /* line contains label, method and operands*/
             NofOperands = (char)amountOfChars(instPos->words[instPos->amountOfWords-1],',')+1;
             operands = malloc(sizeof(char**)* NofOperands);
             convertStringToArray(instPos->words[instPos->amountOfWords-1] ,"," ,operands);
             memoryNode = createMemoryImageNode(IC,getCodeLine(methods, instPos->words[labelFlag] ,operands, NofOperands),'A');
             addNewMemoryNode(memoryImageList,memoryNode);
             IC++;
+            ICF++;
             for (i = 0 ; i < NofOperands; i++)
             {
                 memoryNode = createOperandNodeForMemory(IC++,*(operands+i));
                 addNewMemoryNode(memoryImageList,memoryNode);
+                ICF++;
             }
             break;
         }
-
+        
         STEP2:labelFlag=false;
         instPos=instPos->next;
         lineN++;
@@ -161,17 +192,16 @@ int firstTransition (char *fileName)
     printf("\n\n");
     printSymbolList(symbolTable);
     
-
-
-    /*TODO - move to other transition*/
-    freeSymbolTable(symbolTable);
-    freeMemoryImage(memoryImageList);
+    /*close file*/
     if (fclose(insFile))
     {
         perror("cannot close file!");
-        return EXIT_FAILURE;
+        return NULL;
     }
 
-    return(EXIT_SUCCESS);
+
+    /*start second transition*/
+    return secondTransition(listOfInstructions,fileNameNoExt,symbolTable,memoryImageList,ICF-100,DC,errorFlag);
+
 }
 

@@ -4,6 +4,14 @@
 #include "../Headers/Validations.h"
 #include <stdlib.h>
 #include <string.h>
+/*
+    This section handles the symbol table.
+    the functions are handle all funcitionality of symbol table.
+*/
+
+/*
+    initialize the symbol table as list.
+*/
 symbolTableList* initSymbolTable()
 {
     symbolTableList* list = (symbolTableList*)malloc(sizeof(symbolTableList*));
@@ -12,6 +20,9 @@ symbolTableList* initSymbolTable()
     return list;
 }
 
+/*
+    return a new stucrt object of symbol node.
+*/
 symbolNode* createSymbolNode( char *symbol, int value, char *attr)
 {
     symbolNode* newSymbol=malloc(sizeof(symbolNode));
@@ -27,6 +38,9 @@ symbolNode* createSymbolNode( char *symbol, int value, char *attr)
     return newSymbol;
 }
 
+/*
+    the function add new node for the list.
+*/
 void addNewSymbol(symbolTableList *list, symbolNode *newNode)
 {
     if(list->head == NULL)
@@ -41,9 +55,11 @@ void addNewSymbol(symbolTableList *list, symbolNode *newNode)
     }
 }
 
+/*
+    free the list.
+*/
 void freeSymbolTable(symbolTableList *list)
 {
-    /*TODO need to fix the free function for ALL structs!*/
     symbolNode* tmp;
     symbolNode* head = list->head;
     while (head != NULL)
@@ -77,4 +93,57 @@ void printSymbolList(symbolTableList *list)
         }
         printf("]\n");
     }
+}
+
+/*
+    Checks if a label is exists in the symbol table.
+*/
+boolean isExistLabel(symbolTableList *list,char* label)
+{
+    symbolNode *pos = list->head;
+    while(pos!=NULL)
+    {
+        if(strcmp(pos->symbol,label)==0)
+            return true;
+        pos=pos->next;
+    }
+    return false;
+}
+
+/*
+    Add the entry attribute to a symbol.
+*/
+void addEntryAttrToLabel(symbolTableList *list, char* label)
+{
+    symbolNode *pos = list->head;
+    
+    while(pos!=NULL)
+    {
+        if(strcmp(pos->symbol,label)==0)
+        {
+            pos->attributes=realloc(pos->attributes,sizeof(char**)*(pos->nOfAtt++ + 1));
+            pos->attributes[pos->nOfAtt-1] = malloc(sizeof(char*)*strlen("entry"));
+            strcpy(pos->attributes[pos->nOfAtt-1],"entry");
+            return;
+        }
+        pos=pos->next;
+    }
+}
+
+/*
+    Gets a symbol node by a give name.
+*/
+symbolNode* getSymbolNodeByName(symbolTableList *list, char* label)
+{
+    symbolNode *pos = list->head;
+    
+    while(pos!=NULL)
+    {
+        if(strcmp(pos->symbol,label)==0)
+        {
+            return pos;
+        }
+        pos=pos->next;
+    }
+    return SYMBOL_NOT_FOUND;
 }

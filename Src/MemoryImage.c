@@ -5,6 +5,15 @@
 #include "../Headers/Validations.h"
 #include <stdlib.h>
 #include <string.h>
+/*
+    This section handles the memory image.
+    the functions are handle all funcitionality of memory image.
+*/
+
+
+/*
+    initialize the memory image as list.
+*/
 memoryImageList* initMemoryImageList()
 {
     memoryImageList * list = (memoryImageList*)malloc(sizeof(memoryImageList*));
@@ -13,6 +22,10 @@ memoryImageList* initMemoryImageList()
     return list;
 }
 
+
+/*
+    return a new stucrt object of memory node.
+*/
 memoryNode* createMemoryImageNode(int adress, int value, char type)
 {
     memoryNode* newMemoryNode=malloc(sizeof(memoryNode));
@@ -22,6 +35,9 @@ memoryNode* createMemoryImageNode(int adress, int value, char type)
     return newMemoryNode;
 }
 
+/*
+    the function add new node for the list.
+*/
 void addNewMemoryNode(memoryImageList *list, memoryNode *newNode)
 {
     if(list->head == NULL)
@@ -36,6 +52,9 @@ void addNewMemoryNode(memoryImageList *list, memoryNode *newNode)
     }
 }
 
+/*
+    free the list.
+*/
 void freeMemoryImage(memoryImageList *list)
 {
     memoryNode* tmp;
@@ -48,12 +67,16 @@ void freeMemoryImage(memoryImageList *list)
     }
 }
 
+/*
+    add allocation data to memory image (string or data type). 
+*/
 void addAllocationDataToMemoryImage(memoryImageList *list , char *type, char *data, int startAddress)
 {
     if(strcmp(type,".string")==0)
     {
         int i = 0;
         char *str = substr(data,1,strlen(data)-1); /*remove "" from the data */
+        
         while(i < strlen(str))
         {
             addNewMemoryNode(list, createMemoryImageNode(startAddress+i,(int)str[i],'A'));
@@ -71,7 +94,7 @@ void addAllocationDataToMemoryImage(memoryImageList *list , char *type, char *da
         if(n==0) 
             addNewMemoryNode(list, createMemoryImageNode(startAddress,atoi(arr[0]),'A'));
         else 
-            for(i=0;i<n;i++)
+            for(i=0;i<n+1;i++)
             {
                 addNewMemoryNode(list, createMemoryImageNode(startAddress+i,atoi(arr[i]),'A'));
             }
@@ -107,6 +130,9 @@ void printMemoryList(memoryImageList *list)
     }
 }
 
+/*
+    return a number that represend a funct+opcode+sourcetaget+destinition targer.
+*/
 int getCodeLine(methods* methods, char *method ,char **operands, char nOfOperands)
 {
     char methodIndex = indxOfMethod(methods, method);
@@ -146,6 +172,9 @@ int getCodeLine(methods* methods, char *method ,char **operands, char nOfOperand
     return res;
 }
 
+/*
+    return a node by operand and adress.
+*/
 memoryNode* createOperandNodeForMemory(int address,char *operand)
 {
     addresingType type = checkTypeOfAddressingModes(operand);

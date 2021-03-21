@@ -8,12 +8,23 @@ This file contains all the utilites functions for the project.
 #include "../Headers/Structs.h"
 #include "../Headers/Constants.h"
 #include "../Headers/UtilsFuncs.h"
+#include "../Headers/Validations.h"
+#include "../Headers/MemoryImage.h"
+#include "../Headers/SymbolsTable.h"
+#include "../Headers/EntryAndExtern.h"
 
+/*
+    Utilites functions.
+*/
 
 void trimSpace(char *str);/*Help function to trim spaces*/
 void convertStringToArray(char* str,char *delim ,char** arr); /* this function converts string to an array by using given delimeter */
 char amountOfSpaces(char* line); /*this function returns the amount of spaces */
 
+
+/*
+    the function return new list of instructions from a file.
+*/
 instNode* buildInstructionsList(FILE *insFile)
 {
     char line[MAX_LINE_LEN] ={0};/*varible for reading the lines.*/
@@ -23,6 +34,8 @@ instNode* buildInstructionsList(FILE *insFile)
     {
         instNode *node = malloc(sizeof(instNode));
         trimSpace(line);
+        if(isBlankOrCommentLine(line))
+            continue;
         node->amountOfWords=amountOfSpaces(line)+1;
         node->words = malloc(sizeof(char**) * node->amountOfWords);
         convertStringToArray(line, " \t",node->words);
@@ -39,6 +52,9 @@ instNode* buildInstructionsList(FILE *insFile)
     return head;
 }
 
+/*
+    Build the methods struct.
+*/
 methods* buildMethods()
 {
     methods *strc;
@@ -100,6 +116,10 @@ methods* buildMethods()
     return strc;
 }
 
+/*
+    The function return the index of method.
+    if not exist return an error.
+*/
 char indxOfMethod(methods *methods,char *method)
 {
     char i;
@@ -123,12 +143,17 @@ void trimSpace(char *str)
 
 }
 
+/*
+    convert a string to array by delimeter
+*/
 void convertStringToArray(char* str, char *delim ,char** arr)
 {
     int i;
     char *pWord;
     /* split the elements by space delimeter */ 
-    pWord=strtok(str,delim);
+    char *cloneStr = malloc(sizeof(char*)*strlen(str));
+    strcpy(cloneStr,str);
+    pWord=strtok(cloneStr,delim);
     i=0;
     while(pWord!=NULL)
     {
@@ -147,6 +172,9 @@ char amountOfSpaces(char* line){
   return amountOfSpaces;           
 }
 
+/*
+    return amount of characters of given character c in string.
+*/
 int amountOfChars(char* str, char c){
   int i;
   char amount=0; 
@@ -156,6 +184,10 @@ int amountOfChars(char* str, char c){
   return amount;           
 }
 
+
+/*
+    return a substring from m to n (not including n) position.
+*/
 char* substr(char *src, int m, int n)
 {
     int len, i;
@@ -176,5 +208,72 @@ char* substr(char *src, int m, int n)
     return dest - len;
 }
 
+/*
+    The function create the ob,ext and ent files.
+*/
+void createFiles(exportFile *file)
+{
+    FILE *obFile;
+  
+    memoryNode *memoryPos =file->memoryImage->head;
+    int i;
+    char *extFileName,*entFileName,*obFileName;
 
+    obFileName = malloc(sizeof(char) * strlen(file->fileName));
+    entFileName = malloc(sizeof(char) * strlen(file->fileName));
+    extFileName = malloc(sizeof(char) * strlen(file->fileName));
+   
+    strcpy(obFileName,file->fileName);
+    strcpy(entFileName,file->fileName);
+    strcpy(extFileName,file->fileName);
 
+    strcat(obFileName,".ob");
+    strcat(entFileName,".ent");
+    strcat(extFileName,".ext");
+
+    obFile=fopen(obFileName,"w+");
+    fprintf(obFile,"\t%d %d\n",file->ICF,file->DCF);
+    while(memoryPos!=NULL)
+    {
+        fprintf(obFile,"0%d %03X %c\n",memoryPos->adress,memoryPos->value & 0xfff,memoryPos->type);
+        memoryPos=memoryPos->next;
+    }
+    fclose(obFile);
+
+    obFile=fopen(extFileName,"w+");
+    for (i = 0; i < file->outsource->amountExterns; i++)
+    {
+        fprintf(obFile,"%s 0%d\n",file->outsource->arrExtern[i]->name,file->outsource->arrExtern[i]->address);
+    }
+    fclose(obFile);
+
+    obFile=fopen(entFileName,"w+");
+    for (i = 0; i < file->outsource->amountEntries; i++)
+    {
+        fprintf(obFile,"%s 0%d\n",file->outsource->arrEntry[i]->name,file->outsource->arrEntry[i]->address);
+    }
+    fclose(obFile);
+
+}
+
+/*
+    The function return the index of character in a string
+*/
+int char_index(char c, char *string) {
+    int i;
+    for (i = 0; string[i] != '\0'; i++)
+        if (string[i] == c)
+            return i;
+
+    return ERROR_ARGUMENT_NOT_VALID;
+}
+
+/*
+    free all the structs
+*/
+void freeAllData(exportFile *file)
+{
+    freeMemoryImage(file->memoryImage);
+    freeSymbolTable(file->symbolTable);
+    freeOutsourceData(file->outsource);
+}
