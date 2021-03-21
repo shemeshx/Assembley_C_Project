@@ -131,6 +131,7 @@ exportFile* firstTransition (char *fileName)
         {   
             printf("ERROR : method not exists at line %d,\n",lineN);
             errorFlag=true;
+            goto STEP2;
         }
 
         /* step 13-16 - handle a code instructions line.*/ 
@@ -139,6 +140,7 @@ exportFile* firstTransition (char *fileName)
         case 1:
             printf("ERROR : Wrong number of line words at line %d.\n",lineN);
             errorFlag=true;
+            goto STEP2;
             break;
         case 2: /*there are two options -  */
                 if(labelFlag) /*1. Label with method (no operands)*/
